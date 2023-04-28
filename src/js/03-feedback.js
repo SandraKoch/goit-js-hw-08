@@ -1,5 +1,3 @@
-//refactor lodash throttle used for storage update
-
 import { throttle } from 'lodash';
 
 const formEl = document.querySelector('.feedback-form');
@@ -16,10 +14,9 @@ formEl.addEventListener(
       email: emailInput.value,
       message: messageTextarea.value,
     };
-    //zapisuje obiekt z polami email i message
+    //save an object with email and message to local storage
     localStorage.setItem('feedback-form-state', JSON.stringify(formData));
-  }),
-  500
+  }, 500)
 );
 
 let savedData = localStorage.getItem('feedback-form-state');
@@ -27,8 +24,8 @@ let parsedData = JSON.parse(savedData);
 
 window.addEventListener('load', e => {
   //   e.preventDefault();
-  //dodaj try catch lub warunek jeśli local storage jest pusty
-  //wypełnij danymi z local storage pola formularza
+  //use try catch to avoid error if local storage is empty
+  //fill the form with the data from local storage
   try {
     formEl.elements.email.value = parsedData.email;
     formEl.elements.message.value = parsedData.message;
@@ -39,11 +36,11 @@ window.addEventListener('load', e => {
 
 submitBtnEl.addEventListener('click', e => {
   e.preventDefault();
-  //wyloguj formData
+  //log formData
   console.log('email:', formEl.elements.email.value);
   console.log('message:', formEl.elements.message.value);
-  //wyczyść dane formularza
+  //clear data-form
   formEl.reset();
-  //wyczyść local storage
+  //clear local storage
   localStorage.clear();
 });

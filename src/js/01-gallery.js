@@ -6,7 +6,7 @@ console.log(galleryItems);
 
 // Import opisany w dokumentacji
 import SimpleLightbox from 'simplelightbox';
-const SimpleLightbox = window.SimpleLightbox; // how to tell the difference
+// const SimpleLightbox = window.SimpleLightbox; // how to tell the difference
 
 // Dodatkowy import stylów
 import 'simplelightbox/dist/simple-lightbox.min.css';

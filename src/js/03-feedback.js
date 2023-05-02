@@ -3,42 +3,48 @@ import { throttle } from 'lodash';
 const formEl = document.querySelector('.feedback-form');
 const submitBtnEl = document.querySelector('button');
 
-let formData;
-let emailInput = document.querySelector('[name="email"]');
-let messageTextarea = document.querySelector('[name="message"]');
+const save = data => {
+  localStorage.setItem('feedback-form-state', JSON.stringify(data));
+};
 
-formEl.addEventListener(
-  'input',
-  throttle(() => {
-    formData = {
-      email: emailInput.value,
-      message: messageTextarea.value,
-    };
-    //save an object with email and message to local storage
-    localStorage.setItem('feedback-form-state', JSON.stringify(formData));
-  }, 500)
-);
+const throttledSave = throttle(data => save(data), 500);
+
+formEl.addEventListener('input', event => {
+  const {
+    elements: { email, message },
+  } = event.currentTarget;
+
+  const formData = {
+    email: email.value,
+    message: message.value,
+  };
+
+  throttledSave(formData);
+});
 
 let savedData = localStorage.getItem('feedback-form-state');
-let parsedData = JSON.parse(savedData);
+let parsedData;
+try {
+  parsedData = JSON.parse(savedData);
+} catch {
+  console.log('');
+}
 
-window.addEventListener('load', e => {
-  //   e.preventDefault();
-  //use try catch to avoid error if local storage is empty
-  //fill the form with the data from local storage
-  try {
-    formEl.elements.email.value = parsedData.email;
-    formEl.elements.message.value = parsedData.message;
-  } catch (error) {
-    console.log('Please fill in the form fields');
-  }
-});
+// window.addEventListener('load', e => {})
+
+if (parsedData) {
+  formEl.elements.email.value = parsedData.email;
+  formEl.elements.message.value = parsedData.message;
+} else {
+  console.log('Please fill in the form fields');
+}
 
 submitBtnEl.addEventListener('click', e => {
   e.preventDefault();
   //log formData
   console.log('email:', formEl.elements.email.value);
   console.log('message:', formEl.elements.message.value);
+  console.log(savedData);
   //clear data-form
   formEl.reset();
   //clear local storage
